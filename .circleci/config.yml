@@ -16,7 +16,7 @@ commands:
                 name: "Execute: composer install"
                 command: |
                     if [ ! -f vendor/autoload.php ];then
-                        curl https://getcomposer.org/composer.phar --location --silent  --output /usr/bin/composer;
+                        curl https://getcomposer.org/composer-stable.phar --location --silent  --output /usr/bin/composer;
                         chmod +x /usr/bin/composer;
                         composer global require hirak/prestissimo;
                         composer install --no-interaction --no-progress;
@@ -26,7 +26,7 @@ commands:
         description: "Restore vendor folder from CircleCI cache"
         steps:
             - restore_cache:
-                key: composer-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+                key: composer-{{ checksum "composer.json" }}
 
     store-composer-cache:
         description: "Store vendor folder in CircleCI cache"
@@ -35,7 +35,7 @@ commands:
             - restore-composer-cache
             - composer-install
             - save_cache:
-                key: composer-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+                key: composer-{{ checksum "composer.json" }}
                 paths:
                   - ./vendor
             - persist_to_workspace:
