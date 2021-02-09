@@ -18,7 +18,6 @@ commands:
                     if [ ! -f vendor/autoload.php ];then
                         curl https://getcomposer.org/composer-stable.phar --location --silent  --output /usr/bin/composer;
                         chmod +x /usr/bin/composer;
-                        composer global require hirak/prestissimo;
                         composer install --no-interaction --no-progress;
                     fi
 
@@ -51,29 +50,49 @@ commands:
                 command: make phpcs
 
 executors:
-    php:
+    php74:
         docker:
-            - image: php:7.3.8-cli-alpine3.10
+            - image: php:7.4-cli-alpine
+        working_directory: ~/repository
+    php80:
+        docker:
+            - image: php:8.0-cli-alpine
         working_directory: ~/repository
 
 jobs:
-    composer:
-        executor: php
+    composer74:
+        executor: php74
         steps:
             - store-composer-cache
 
-    phpcs:
-        executor: php
+    phpcs74:
+        executor: php74
+        steps:
+            - checkout-alpine
+            - restore-composer-cache
+            - phpcs
+    composer80:
+        executor: php80
+        steps:
+            - store-composer-cache
+
+    phpcs80:
+        executor: php80
         steps:
             - checkout-alpine
             - restore-composer-cache
             - phpcs
 
 workflows:
-    version: 2.1
-    Code quality:
+    Code quality PHP 7.4:
         jobs:
-            - composer
-            - phpcs:
+            - composer74
+            - phpcs74:
+               requires:
+                   - composer74
+    Code quality PHP 8.0:
+        jobs:
+            - composer80
+            - phpcs80:
                 requires:
-                    - composer
+                    - composer80
