@@ -1,6 +1,7 @@
 # Wizaplace PHP Code Sniffs
 
-Wizaplace PHP code sniffs
+[![CircleCI](https://circleci.com/gh/wizacode/phpcs/tree/master.svg?style=svg)](https://circleci.com/gh/wizaplace/php-etl/tree/master)
+
 
 ## Installation
 
